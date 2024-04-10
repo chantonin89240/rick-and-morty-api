@@ -42,7 +42,6 @@ internal class CharacterObject: RealmObject {
     var locationId: Int = -1
     var image: String = ""
     var created: String = ""
-    var episodes: RealmList<Episode> = RealmList()
 }
 
 internal fun CharacterResponse.toRealmObject() = CharacterObject().also { obj ->
@@ -70,5 +69,8 @@ internal fun CharacterObject.toModel() = Character(
     origin = originName to originId,
     location = locationName to locationId,
     avatarUrl = image,
-    episodes = episodes
+    episodes = emptyList()
 )
+
+internal fun CharacterObject.toModel(episodes : List<Episode>) =
+    this.toModel().copy(episodes = episodes)
