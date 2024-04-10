@@ -1,5 +1,6 @@
 package org.mathieu.cleanrmapi.data.local.objects
 
+import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mathieu.cleanrmapi.data.remote.responses.CharacterResponse
@@ -7,6 +8,7 @@ import org.mathieu.cleanrmapi.data.repositories.tryOrNull
 import org.mathieu.cleanrmapi.domain.models.character.Character
 import org.mathieu.cleanrmapi.domain.models.character.CharacterGender
 import org.mathieu.cleanrmapi.domain.models.character.CharacterStatus
+import org.mathieu.cleanrmapi.domain.models.character.Episode
 
 /**
  * Represents a character entity stored in the SQLite database. This object provides fields
@@ -40,8 +42,8 @@ internal class CharacterObject: RealmObject {
     var locationId: Int = -1
     var image: String = ""
     var created: String = ""
+    var episodes: RealmList<Episode> = RealmList()
 }
-
 
 internal fun CharacterResponse.toRealmObject() = CharacterObject().also { obj ->
     obj.id = id
@@ -67,5 +69,6 @@ internal fun CharacterObject.toModel() = Character(
     gender = tryOrNull { CharacterGender.valueOf(gender) } ?: CharacterGender.Unknown,
     origin = originName to originId,
     location = locationName to locationId,
-    avatarUrl = image
+    avatarUrl = image,
+    episodes = episodes
 )
