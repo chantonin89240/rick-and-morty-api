@@ -12,16 +12,11 @@ import org.mathieu.cleanrmapi.domain.models.character.Episode
  *
  * @property id Unique identifier of the character.
  * @property name Name of the character.
- * @property status Current status of the character (e.g. 'Alive', 'Dead').
- * @property species Biological species of the character.
- * @property type The type or subspecies of the character.
- * @property gender Gender of the character (e.g. 'Female', 'Male').
- * @property originName The origin location name.
- * @property originId The origin location id.
- * @property locationName The current location name.
- * @property locationId The current location id.
- * @property image URL pointing to the character's avatar image.
- * @property created Timestamp indicating when the character entity was created in the database.
+ * @property air_date Release date.
+ * @property episode Episode identification code.
+ * @property characters Character featured in the episode.
+ * @property url Episode url.
+ * @property created Episode creation date.
  */
 internal class EpisodeObject: RealmObject {
     @PrimaryKey

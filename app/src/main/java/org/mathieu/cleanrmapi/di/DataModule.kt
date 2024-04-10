@@ -33,6 +33,9 @@ val dataModule = module {
 
     single<CharacterRepository> { CharacterRepositoryImpl(get(), get(), get()) }
 
+    /**
+     * injection de dépendance pour les épisodes
+     */
     single { EpisodeLocal(get()) }
 
     single { EpisodeApi(get()) }

@@ -37,32 +37,23 @@ internal class EpisodeRepositoryImpl(
             .also { if (it.first().isEmpty()) fetchNext() }
 
 
-    /**
-     * Fetches the next batch of characters and saves them to local storage.
-     *
-     * This function works as follows:
-     * 1. Reads the next page number from the data store.
-     * 2. If there's a valid next page (i.e., page is not -1), it fetches characters from the API for that page.
-     * 3. Extracts the next page number from the API response and updates the data store with it.
-     * 4. Transforms the fetched character data into their corresponding realm objects.
-     * 5. Saves the transformed realm objects to the local database.
-     *
-     * Note: If the `next` attribute from the API response is null or missing, the page number is set to -1, indicating there's no more data to fetch.
-     */
     private suspend fun fetchNext() {
-
+    // Récupère le numéro de la prochaine page à charger depuis le DataStore
         val page = context.dataStore.data.map { prefs -> prefs[nextPage] }.first()
 
+        // Vérifie que le numéro de la page n'est pas égal à -1
         if (page != -1) {
-
+            // Appelle l'API pour récupérer les épisodes de la page actuelle
             val response = episodeApi.getEpisodes(page)
 
+            // Extrait le numéro de la prochaine page à charger depuis la réponse de l'API et met à jour le DataStore
             val nextPageToLoad = response.info.next?.split("?page=")?.last()?.toInt() ?: -1
-
             context.dataStore.edit { prefs -> prefs[nextPage] = nextPageToLoad }
 
+            // Convertit les objets de réponse en objets EpisodeObject
             val objects = response.results.map(transform = EpisodeResponse::toRealmObject)
 
+            // Enregistre les objets dans la base de données locale
             episodeLocal.saveEpisodes(objects)
         }
 
@@ -78,8 +69,8 @@ internal class EpisodeRepositoryImpl(
      * 4. If the character is still not found, it throws an exception.
      *
      * @param id The unique identifier of the character to retrieve.
-     * @return The [Character] object representing the character details.
-     * @throws Exception If the character cannot be found both locally and via the API.
+     * @return The [Episode] object representing the episode details.
+     * @throws Exception If the episode cannot be found both locally and via the API.
      */
     override suspend fun getEpisode(id: Int): Episode =
         episodeLocal.getEpisode(id)?.toModel()
